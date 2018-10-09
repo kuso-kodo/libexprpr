@@ -4,4 +4,4 @@ This project is part of my homework project, a calculator. It uses the well-know
 
 ### TODO
 
-[] Everything
+[ ] Everything
