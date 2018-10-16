@@ -38,6 +38,7 @@ int main(void) {
         } else {
             printf("Out[%d]: %g\n",count,result);
         }
+	pr_clear_error();
         pr_free(ast);
         count++;
     }
