@@ -36,6 +36,9 @@ const char* __prprprpr_error_text = NULL;
 #define ERR_DIVISION_BY_ZERO "EVALUATOR: division by zero caused a unwanted error."
 #define SET_ERR_TEXT(TEXT)   do{ if(__prprprpr_error_text == NULL) __prprprpr_error_text = TEXT; }while(0)
 
+void pr_clear_error(void) {
+	__prprprpr_error_text = NULL;
+}
 
 int pr_error(void) {
     return __prprprpr_error != 0;

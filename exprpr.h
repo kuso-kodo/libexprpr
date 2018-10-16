@@ -48,6 +48,11 @@ double pr_eval(const pr_expr *expr);
 int pr_error(void);
 
 /**
+ * Clear the error.
+ */
+void pr_clear_error(void);
+
+/**
  * Get the error code.
  *
  * @return Returns the error code. When the error is
