@@ -4,7 +4,7 @@ project(libexprpr)
 
 find_library(MATH_LIB m)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O3")
 
 set(SOURCE_FILES
         exprpr.h
