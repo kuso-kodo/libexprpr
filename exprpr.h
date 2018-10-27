@@ -2,24 +2,28 @@
 #define __PRPRPRPR_H
 
 enum {
-    PR_VARIABLE = 0,
-    PR_CONSTANT,
-    PR_FUNCTION0 = 4,
-    PR_FUNCTION1,
-    PR_FUNCTION2,
-    PR_FUNCTION3,
+  PR_VARIABLE = 0,
+  PR_CONSTANT,
+  PR_FUNCTION0 = 4,
+  PR_FUNCTION1,
+  PR_FUNCTION2,
+  PR_FUNCTION3,
 };
 
 typedef struct __expression {
-    int         type;
-    union       {double value; const double *refer; const void *func; };
-    void        *arguments[1];
+  int type;
+  union {
+    double value;
+    const double *refer;
+    const void *func;
+  };
+  void *arguments[1];
 } pr_expr;
 
 typedef struct __variable {
-    const char  *name;
-    const void  *address;
-    int         type;
+  const char *name;
+  const void *address;
+  int type;
 } pr_var;
 
 /**
@@ -78,4 +82,4 @@ const char *pr_error_text(void);
  * a expression.
  */
 void pr_free(pr_expr *n);
-#endif // __PRPRPRPR_H
+#endif  // __PRPRPRPR_H
