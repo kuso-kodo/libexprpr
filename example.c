@@ -2,6 +2,15 @@
 #include <string.h>
 #include "exprpr.h"
 
+#define READ_INPUT(string, terminal) do {			\
+			char c;					\
+			int i = 0; 				\
+			while((c = getchar()) != terminal)	\
+				string[i++] = c;		\
+			string[i] = '\0';			\
+		} while(0)
+				
+
 void print_note(int n) {
     int i;
     for(i = 0; i < n - 3; i++) {
@@ -15,18 +24,13 @@ void print_note(int n) {
 }
 
 int main(void) {
-    puts("A toy expression evaluator. Type exit() to quit.");
+    puts("A toy expression evaluator. Type exit= to quit.");
     int count = 0;
     char expression[1024];
 
     while(1) {
         printf(" In[%d]: ",count);
-        gets(expression);
-        if(strcmp(expression,"exit()") == 0)
-            return 0;
-        if(strcmp(expression,"") == 0) {
-            continue;
-        }
+        READ_INPUT(expression, '=');
         pr_expr *ast = pr_parse(expression,0,0);
         double result = pr_eval(ast);
         if(pr_error()) {
@@ -44,3 +48,4 @@ int main(void) {
     }
     return 0;
 }
+

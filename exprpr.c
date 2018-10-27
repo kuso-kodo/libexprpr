@@ -130,26 +130,31 @@ static double e(void) {
     return exp(1);
 }
 
+static double __exit(void) {
+    exit(0);
+    return NAN;
+}
+
 static const pr_var __built_in_var_table[] = {
-    {"abs",		fabs,	PR_FUNCTION1},
+    {"abs",	fabs,	PR_FUNCTION1},
     {"acos",	acos,	PR_FUNCTION1},
     {"asin",	asin,	PR_FUNCTION1},
     {"atan",	atan,	PR_FUNCTION1},
     {"atan2",	atan2,	PR_FUNCTION1},
     {"ceil",	ceil,	PR_FUNCTION1},
-    {"cos",		cos,	PR_FUNCTION1},
+    {"cos",	cos,	PR_FUNCTION1},
     {"cosh",	cosh,	PR_FUNCTION1},
-    {"e",		e,		PR_FUNCTION0},
-    {"exp",		exp,	PR_FUNCTION1},
+    {"e",	e,	PR_FUNCTION0},
+    {"exit",	__exit,	PR_FUNCTION0},
+    {"exp",	exp,	PR_FUNCTION1},
     {"floor",	floor,	PR_FUNCTION1},
-    {"ln",		log,	PR_FUNCTION1},
+    {"ln",	log,	PR_FUNCTION1},
     {"log10",	log,	PR_FUNCTION1},
-    {"pi",		pi,		PR_FUNCTION0},
-    {"pow",		pow,	PR_FUNCTION2},
-    {"sin",		sin,	PR_FUNCTION1},
+    {"pi",	pi,	PR_FUNCTION0},
+    {"pow",	pow,	PR_FUNCTION2},
+    {"sin",	sin,	PR_FUNCTION1},
     {"sqrt",	sqrt,	PR_FUNCTION1},
-    {"tan",		tan,	PR_FUNCTION1},
-    {0, 0, 0},
+    {"tan",	tan,	PR_FUNCTION1},
 };
 
 // Naive linear search. Use binary search to get a better performance,
@@ -164,6 +169,7 @@ static const pr_var *get_builtin_token(const char *name, int len) {
     }
     return 0;
 }
+
 static const pr_var *get_external_token(const state *s, const char *name, int len) {
     int i;
     const pr_var *var;
@@ -250,11 +256,12 @@ void next_token(state *s) {
                     }
                 }
         } else {
-            if(isblank(s->next[0])) {
-                s->next++;
-                continue;
-            }
             switch (s->next[0]) {
+		    case ' ':
+		    case '\t':
+		    case '\n':
+			    s->type = TOK_NUL;
+			    break;
                     case '+': s->type = TOK_IFX; s->func = __add__; break;
                     case '-': s->type = TOK_IFX; s->func = __sub__; break;
                     case '*': s->type = TOK_IFX; s->func = __mul__; break;
