@@ -15,6 +15,7 @@
 #endif
 
 #include <ctype.h>
+#include <errno.h>
 #include <limits.h>
 
 #include "exprpr.h"
@@ -29,11 +30,10 @@ typedef double (*pr_func2)(double, double);
 //////////////////////////////////////////////////////////
 int __prprprpr_error = 0;
 const char *__prprprpr_error_text = NULL;
-#define ERR_UNKNOWN_FUNCTION "PARSER: unknown function."
-#define ERR_UNKNOWN_SYMBOL "PARSER: unknown symbol."
-#define ERR_ARGC_MISMATCH "PARSER: two few arguments."
-#define ERR_DIVISION_BY_ZERO \
-  "EVALUATOR: division by zero caused a unwanted error."
+#define ERR_UNKNOWN_FUNCTION "PARSER: unknown function"
+#define ERR_UNKNOWN_SYMBOL "PARSER: unknown symbol"
+#define ERR_ARGC_MISMATCH "PARSER: two few arguments"
+#define ERR_DIVISION_BY_ZERO "Division by zero"
 #define SET_ERR_TEXT(TEXT)                                           \
   do {                                                               \
     if (__prprprpr_error_text == NULL) __prprprpr_error_text = TEXT; \
@@ -136,10 +136,10 @@ static const pr_var __built_in_var_table[] = {
     {"cos", cos, PR_FUNCTION1},     {"cosh", cosh, PR_FUNCTION1},
     {"e", e, PR_FUNCTION0},         {"exit", __exit, PR_FUNCTION0},
     {"exp", exp, PR_FUNCTION1},     {"floor", floor, PR_FUNCTION1},
-    {"ln", log, PR_FUNCTION1},      {"log10", log, PR_FUNCTION1},
-    {"pi", pi, PR_FUNCTION0},       {"pow", pow, PR_FUNCTION2},
-    {"sin", sin, PR_FUNCTION1},     {"sqrt", sqrt, PR_FUNCTION1},
-    {"tan", tan, PR_FUNCTION1},
+    {"lg", log10, PR_FUNCTION1},    {"ln", log, PR_FUNCTION1},
+    {"log", log, PR_FUNCTION1},     {"pi", pi, PR_FUNCTION0},
+    {"pow", pow, PR_FUNCTION2},     {"sin", sin, PR_FUNCTION1},
+    {"sqrt", sqrt, PR_FUNCTION1},   {"tan", tan, PR_FUNCTION1},
 };
 
 // Naive linear search. Use binary search to get a better performance,
@@ -475,7 +475,7 @@ pr_expr *pr_parse(const char *c_expr, const pr_var *var_table, int var_count) {
 //////////////////////////////////////////////////////////
 // Evaluator.                                           //
 //////////////////////////////////////////////////////////
-double pr_eval(const pr_expr *expr) {
+double __pr_eval(const pr_expr *expr) {
   if (expr == NULL) {
     return NAN;
   }
@@ -508,4 +508,14 @@ double pr_eval(const pr_expr *expr) {
     default:
       return NAN;
   }
+}
+
+double pr_eval(const pr_expr *expr) {
+  errno = 0;
+  double ret = __pr_eval(expr);
+  if (errno != 0) {
+    __prprprpr_error = -2;
+    SET_ERR_TEXT(strerror(errno));
+  }
+  return ret;
 }
